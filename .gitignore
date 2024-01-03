@@ -1,0 +1,83 @@
+# Django .gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+venv/
+env/
+.venv/
+.vscode/
+.idea/
+
+# Django-specific
+*.log
+db.sqlite3
+
+# Ignore migrations, as they are usually auto-generated
+*/migrations/
+
+# Ignore local settings
+local_settings.py
+# React .gitignore
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build files
+/build
+/dist
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+# Local development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Output of 'npm run build'
+/build
+
+# .vscode
+.vscode/
+# Common .gitignore
+
+# Editor-specific files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.svn/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Common build artifacts
+*.o
+*.lo
+*.la
+*.al
+*.libs
+*.so
+*.so.[0-9]*
+*.a
+*.pyc
+*.pyo
+*.rej
+*.~c
+*.bak
+*.swp
