@@ -81,3 +81,20 @@ ehthumbs.db
 *.~c
 *.bak
 *.swp
+
+__pycache__
+instance/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.log
+*.sqlite
+*.xlsx
+*.pyc
+*.pyo
+*.pyd
+
+# FastAPI specific
+__pycache__
+.env

@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  postgres_auth:
+    image: postgres:16
+    container_name: postgres_task_auth_container
+    environment:
+      POSTGRES_DB: task_auth_db
+      POSTGRES_USER: task_auth_user
+      POSTGRES_PASSWORD: task_auth_user123
+    volumes:
+      - postgres_task_auth_data:/var/lib/postgresql/data
+
+  postgres_task:
+    image: postgres:16
+    container_name: postgres_task_container
+    environment:
+      POSTGRES_DB: task_db
+      POSTGRES_USER: task_user
+      POSTGRES_PASSWORD: task_user123
+    volumes:
+      - postgres_task_data:/var/lib/postgresql/data
+
+  task_auth:
+    build:
+      context: ./backend/authentication
+      dockerfile: Dockerfile
+    image: task-auth:latest
+    container_name: task-auth
+    command: sh -c "uvicorn auth.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - 8001:8000
+    depends_on:
+      - postgres_auth
+
+  task_app:
+    build:
+      context: ./backend/task
+      dockerfile: Dockerfile
+    image: task-todo:lastest
+    container_name: task-app
+    command: sh -c "chmod +x ./migrate.sh && chmod +x ./entrypoint.sh && sh ./migrate.sh && ./entrypoint.sh"
+    ports:
+      - 8002:8000
+    env_file:
+      - ./backend/task/.env
+    volumes:
+      - ./backend/task:/task-todo
+    depends_on:
+      - postgres_task
+
+  task_checker:
+    build:
+      context: ./backend/task-checker
+      dockerfile: Dockerfile
+    image: task-checker:latest
+    container_name: task-checker
+    command: sh -c "python -m flask run --host=0.0.0.0 --port=5000"
+    ports:
+      - 8003:5000
+
+  # task_frontend:
+  #   container_name: task-frontend
+  #   build:
+  #     context: ./frontend/task
+  #     dockerfile: Dockerfile
+  #   image: task-frontend:lastest
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - .:/task-frontend
+
+volumes:
+  postgres_task_data:
+  postgres_task_auth_data:
