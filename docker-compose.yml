@@ -33,6 +33,7 @@ services:
     depends_on:
       - postgres_auth
 
+
   task_app:
     build:
       context: ./backend/task
@@ -48,6 +49,7 @@ services:
       - ./backend/task:/task-todo
     depends_on:
       - postgres_task
+      - task_auth
 
   task_checker:
     build:
@@ -58,17 +60,9 @@ services:
     command: sh -c "python -m flask run --host=0.0.0.0 --port=5000"
     ports:
       - 8003:5000
-
-  # task_frontend:
-  #   container_name: task-frontend
-  #   build:
-  #     context: ./frontend/task
-  #     dockerfile: Dockerfile
-  #   image: task-frontend:lastest
-  #   ports:
-  #     - "5173:5173"
-  #   volumes:
-  #     - .:/task-frontend
+    depends_on:
+      - postgres_task
+      - task_auth
 
 volumes:
   postgres_task_data:

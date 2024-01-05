@@ -26,5 +26,9 @@ class Token(BaseModel):
     token_type: str
 
 
+class Task(BaseModel):
+    title: str
+    description: str
+
 class TokenData(BaseModel):
     email: Optional[str] = None

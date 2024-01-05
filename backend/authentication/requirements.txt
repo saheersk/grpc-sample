@@ -1,5 +1,6 @@
 bcrypt
 fastapi
+httpx
 passlib
 psycopg2-binary
 python-jose

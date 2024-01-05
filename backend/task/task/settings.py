@@ -16,7 +16,6 @@ ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="", cast=lambda v: [s.str
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,13 +23,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    "rest_framework",
+    "corsheaders",
+
+    "task_service.api",
 ]
 
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:5173",]
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://localhost:8001", "http://localhost:8003", "http://localhost:8002", "http://192.168.65.1:*"]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:8001",
+    "http://localhost:8003",
+    "http://localhost:8002",
+    "http://192.168.65.1:*",
+]
 CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
 CORS_ALLOW_HEADERS = ('content-type', 'authorization', 'upgrade', 'sec-websocket-key', 'sec-websocket-protocol')
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -40,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "corsheaders.middleware.CorsMiddleware", 
 ]
 
 ROOT_URLCONF = 'task.urls'
@@ -123,7 +137,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

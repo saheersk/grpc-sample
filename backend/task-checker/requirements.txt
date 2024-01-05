@@ -1,3 +1,4 @@
 asgiref
 Flask
 uvicorn
+requests
