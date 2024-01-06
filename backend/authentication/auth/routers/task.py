@@ -4,10 +4,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 from .. import schemas, oauth2, database
 
 
@@ -24,7 +20,6 @@ TASK_URL = "http://task-app:8000/task/api/v1/service/"
 async def process_task_request(method: str, data: schemas.Task = None):
     try:
         async with httpx.AsyncClient() as client:
-            logger.info(f"Attempting to connect to: {TASK_URL}")
             if method == "GET":
                 response = await client.get(TASK_URL)
             elif method == "POST":
@@ -37,7 +32,6 @@ async def process_task_request(method: str, data: schemas.Task = None):
             return response.json()
         
     except httpx.ConnectError as ce:
-        logger.error(f"ConnectError: {ce}")
         print(f"ConnectError: {ce}")
 
     except httpx.HTTPError as e:

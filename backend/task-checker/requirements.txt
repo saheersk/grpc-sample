@@ -2,3 +2,6 @@ asgiref
 Flask
 uvicorn
 requests
+celery
+confluent_kafka
+pykafka

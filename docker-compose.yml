@@ -33,7 +33,6 @@ services:
     depends_on:
       - postgres_auth
 
-
   task_app:
     build:
       context: ./backend/task
@@ -64,6 +63,74 @@ services:
       - postgres_task
       - task_auth
 
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka_task
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://kafka:9093  # Change the port to 9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093  # Change the port to 9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+  
+  rabbitmq:
+    restart: always
+    image: "rabbitmq:3-management"
+    container_name: "rabbitmq_container"
+    ports:
+      - "5672:5672" 
+      - "15672:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    depends_on:
+      - task_checker
+
+  celery_flask:
+    restart: always
+    build: 
+      context: ./backend/task-checker
+    environment:
+      - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq:5672//
+      - CELERY_APP=flask
+    container_name: celery_flask
+    depends_on:
+      - rabbitmq
+      - task_checker
+    command: celery -A task.tasks worker --loglevel=info
+
+  celery_app:
+    restart: always
+    build: 
+      context: ./backend/task
+    env_file:
+      - ./backend/task/.env
+    volumes:
+      - ./backend/task:/product-task
+    container_name: celery_task
+    depends_on:
+      - rabbitmq
+      - task_app
+      - postgres_task
+    command: celery -A task-checker.config worker --loglevel=info  
+
 volumes:
   postgres_task_data:
   postgres_task_auth_data:
+  rabbitmq_data:

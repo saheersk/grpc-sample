@@ -1,0 +1,26 @@
+# from kombu import Exchange, Queue
+
+# CELERY_IMPORTS = ('task',)
+CELERY_BROKER_URL = 'pyamqp://guest:guest@rabbitmq:5672//'
+CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = 'json'
+CELERY_DISABLE_RATE_LIMITS = 'True'
+CELERY_IGNORE_RESULT = 'True'
+CELERY_TASK_RESULT_EXPIRES = '86400' 
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = 'True'
+CELERY_APP='flask'
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_DISABLE_RATE_LIMITS = True
+# CELERY_IGNORE_RESULT = True
+# CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24
+# CELERY_TIMEZONE = 'UTC'
+# CELERY_ENABLE_UTC = True
+
+# CELERY_QUEUES = (
+#     Queue('default', Exchange('default'), routing_key='default'),
+# )
