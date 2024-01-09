@@ -31,7 +31,7 @@ INSTALLED_APPS = [
 ]
 
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://localhost:8001", "http://localhost:8003", "http://localhost:8002", "http://192.168.65.1:*"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://localhost:8001", "http://localhost:8003", "http://localhost:8002", "http://192.168.65.1:*", "http://task-auth:8000"]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -39,6 +39,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8003",
     "http://localhost:8002",
     "http://192.168.65.1:*",
+    "http://task-auth:8000",
 ]
 CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
 CORS_ALLOW_HEADERS = ('content-type', 'authorization', 'upgrade', 'sec-websocket-key', 'sec-websocket-protocol')

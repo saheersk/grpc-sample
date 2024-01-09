@@ -5,3 +5,7 @@ requests
 celery
 confluent_kafka
 pykafka
+sqlalchemy
+flask_sqlalchemy
+flask-cors
+psycopg2-binary

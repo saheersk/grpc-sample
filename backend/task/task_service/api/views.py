@@ -16,23 +16,17 @@ class TaskView(APIView):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         
-        topic = 'test'  
-        message = f'Task created: {serializer.data}'  
-        # produce_kafka_message(topic, message)
-        async_produce_kafka_message.delay(topic, message)
-
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = TaskSerializer(data=request.data)
 
         if serializer.is_valid():
-            topic = 'test'  
-            message = f'Task created: {serializer.data}'  
-            produce_kafka_message(topic, message)
-
+            topic = 'test'
+            message = f'Task created: {serializer.validated_data}'
+            async_produce_kafka_message.apply_async(args=[topic, message], queue='queue_for_task1')
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

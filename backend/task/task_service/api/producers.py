@@ -1,7 +1,7 @@
 from confluent_kafka import Producer
 
 
-KAFKA_BOOTSTRAP_SERVERS = 'kafka:9093'
+KAFKA_BOOTSTRAP_SERVERS = 'kafka_task:9092'
 
 
 def produce_kafka_message(topic, message):
@@ -16,7 +16,7 @@ def produce_kafka_message(topic, message):
                 print('Message delivery failed: {}'.format(err))
             else:
                 print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
-                
+
         print(f"Producing message to topic: {topic}, message: {message}")
         producer.produce(topic, message, callback=delivery_report)
         producer.flush()
