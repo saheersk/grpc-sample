@@ -1,4 +1,6 @@
 import uuid
+import json
+from json.decoder import JSONDecodeError
 
 from confluent_kafka import Consumer, TopicPartition
 from celery import Celery
@@ -12,22 +14,29 @@ celery = Celery('task_checker.tasks_flask', broker='pyamqp://guest:guest@rabbitm
 group_id = f"myapp_{uuid.uuid4()}"
 KAFKA_BOOTSTRAP_SERVERS = 'kafka_task:9092'
 
-
 @celery.task(queue='queue_for_task2')
 def save_message_to_database_async(value):
-    print("Processing message:", value)
+    from task_checker.app import app
 
-    title = value.get('title')
-    description = value.get('description')
+    with app.app_context():
+        try:
+            print("Processing message:", value)
 
-    new_item = Item(title=title, description=description)
-    db.session.add(new_item)
-    db.session.commit()
+            title = value.get('title')
+            description = value.get('description')
 
-    print("Message saved to the database:", value)
+            new_item = Item(title=title, description=description)
+            db.session.add(new_item)
+            db.session.commit()
+
+            print("Message saved to the database:", value)
+
+        except Exception as e:
+            print(f"Error processing message: {e}")
 
 @celery.task(queue='queue_for_task2')
 def consume_kafka_messages(topic):
+    print("Starting celery kafka messages")
     consumer = Consumer({
         'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
         'group.id': group_id,
@@ -42,20 +51,26 @@ def consume_kafka_messages(topic):
             msg = consumer.poll(1.0)
 
             if msg is None:
-                print("No more messages. Stopping.")
+                print("msg is None", msg)
                 break
             if msg.error():
                 print("Consumer error: {}".format(msg.error()))
                 continue
 
-            message_value = msg.value().decode('utf-8')
-            print('Received message: {}'.format(message_value))
+            try:
+                string_message = msg.value().decode('utf-8')
+                print("String recived",string_message)
 
-            save_message_to_database_async.delay(message_value)
+                message_data = json.loads(string_message)
+                print('Received message:', message_data)      
+
+                save_message_to_database_async.delay(message_data)  
+
+            except JSONDecodeError as e:
+                print('Error decoding JSON: {}'.format(e))
+                print('Problematic message: {}'.format(msg.value().decode('utf-8')))
 
     except KeyboardInterrupt:
         print("Received keyboard interrupt")
     finally:
         consumer.close()
-
-

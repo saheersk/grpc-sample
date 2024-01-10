@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package crud;
+
+service CrudService {
+    rpc CreateItem (Todo) returns (Todo);
+    rpc GetItem (ItemID) returns (Todo);
+    rpc UpdateItem (Todo) returns (Todo);
+    rpc DeleteItem (ItemID) returns (DeleteResponse);
+    rpc ListItems (Empty) returns (TodoList);
+}
+
+message Todo {
+    int32 id = 1;
+    string title = 2;
+    string description = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
+
+message TodoList {
+    repeated Todo items = 1;
+}

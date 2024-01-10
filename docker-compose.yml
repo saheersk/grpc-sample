@@ -73,8 +73,22 @@ services:
       - postgres_task
       - task_auth
 
+  zookeeper:
+    image: bitnami/zookeeper:3.7.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+     ZOO_ENABLE_AUTH: 'yes'
+     ZOO_SERVER_USERS: 'user1,user2'
+     ZOO_SERVER_PASSWORDS: 'pass4user1,pass4user2'
+     BITNAMI_DEBUG: 'yes'
+    volumes:
+      - ./zookeeper/data:/bitnami/zookeeper
+    restart: unless-stopped
+
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:2.8.0
     container_name: kafka_task
     ports:
       - "9092:9092"
@@ -88,20 +102,6 @@ services:
       - zookeeper
     restart: unless-stopped
 
-  zookeeper:
-    image: bitnami/zookeeper:latest
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-     ZOO_ENABLE_AUTH: 'yes'
-     ZOO_SERVER_USERS: 'user1,user2'
-     ZOO_SERVER_PASSWORDS: 'pass4user1,pass4user2'
-     BITNAMI_DEBUG: 'yes'
-    volumes:
-      - ./zookeeper/data:/bitnami/zookeeper
-    restart: unless-stopped
-  
   rabbitmq:
     restart: always
     image: "rabbitmq:3-management"

@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework.views import APIView
@@ -6,7 +8,6 @@ from rest_framework import status
 
 from .models import Task
 from .serializers import TaskSerializer
-from .producers import produce_kafka_message
 from .tasks import async_produce_kafka_message
 
 
@@ -23,7 +24,7 @@ class TaskView(APIView):
 
         if serializer.is_valid():
             topic = 'test'
-            message = f'Task created: {serializer.validated_data}'
+            message = json.dumps(serializer.validated_data)
             async_produce_kafka_message.apply_async(args=[topic, message], queue='queue_for_task1')
             serializer.save()
 

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
 from .database import engine
-from .routers import user, authentication, task
+from .routers import user, authentication, task, task_checker
 
 
 app = FastAPI()
@@ -22,3 +22,4 @@ app.add_middleware(
 app.include_router(authentication.router)
 app.include_router(user.router)
 app.include_router(task.router)
+app.include_router(task_checker.router)

@@ -17,4 +17,3 @@ def index():
 def get_items():
     items = Item.query.all()
     return jsonify([{'id': item.id, 'title': item.title, 'description': item.description} for item in items])
-    # return "hello"

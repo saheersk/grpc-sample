@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 from task_checker.routers.new_task import router
 from task_checker.celery_instance import celery
@@ -30,6 +31,8 @@ def create_app():
 
     db.init_app(app)
     make_celery(app)
+
+    Migrate(app, db)
 
     app.register_blueprint(router, url_prefix='/flask')
 

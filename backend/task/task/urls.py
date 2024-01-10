@@ -6,7 +6,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('task/api/v1/service/', include("task_service.api.urls"))
+    path('task/api/v1/service/', include("task_service.api.urls")),
+    path('todo/api/v1/', include("crud.api.urls"))
 ]
 
 
