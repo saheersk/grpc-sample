@@ -2,13 +2,14 @@ import json
 
 from django.shortcuts import get_object_or_404
 
+import asyncio
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Task
 from .serializers import TaskSerializer
-from .tasks import async_produce_kafka_message
+from .tasks import async_produce_kafka_message, async_produce_nat
 
 
 class TaskView(APIView):
@@ -16,6 +17,11 @@ class TaskView(APIView):
     def get(self, request):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
+
+        serialized_message = json.dumps({"message": "Hello Nats"})
+        
+        # async_produce_nat.apply_async(args=['my_subject', serialized_message], queue='queue_for_task1')
+        async_produce_nat.apply_async(args=['my_subject', serialized_message], queue='queue_for_task1')
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 

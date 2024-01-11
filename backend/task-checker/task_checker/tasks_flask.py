@@ -74,3 +74,11 @@ def consume_kafka_messages(topic):
         print("Received keyboard interrupt")
     finally:
         consumer.close()
+
+import asyncio
+from task_checker.consumers import subscribe
+
+@celery.task(queue='queue_for_task2')
+def async_subscribe(subject):
+    asyncio.run(subscribe(subject))
+

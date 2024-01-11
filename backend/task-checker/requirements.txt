@@ -2,7 +2,7 @@ asgiref
 Flask
 uvicorn
 requests
-celery
+celery==5.3.6
 confluent_kafka
 pykafka
 sqlalchemy
@@ -10,3 +10,4 @@ flask_sqlalchemy
 flask-cors
 psycopg2-binary
 Flask-Migrate
+asyncio-nats-client

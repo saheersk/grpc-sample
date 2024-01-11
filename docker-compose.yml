@@ -117,6 +117,12 @@ services:
     depends_on:
       - task_checker
 
+  nats:
+   image: nats:latest
+   ports:
+     - 4222:4222
+     - 8222:8222
+
   celery_app:
     restart: always
     build: 
