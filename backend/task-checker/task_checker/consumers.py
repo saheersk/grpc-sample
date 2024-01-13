@@ -2,20 +2,64 @@ import asyncio
 from nats.aio.client import Client as NATS
 
 
+# async def message_handler(msg):
+#     print("message====================")
+#     print(f"Received message: {msg}")
+
+
+# async def consume_messages(subject, event):
+#     nc = NATS()
+
+#     try:
+#         print("consumer========================")
+#         await nc.connect(servers=["nats://nats:4222"])
+
+#         # Use await when subscribing
+#         await nc.subscribe('my_subject', cb=message_handler)
+
+#         # Signal that the subscription is ready
+#         event.set()
+#     except Exception as e:
+#         print(f"Error consuming messages: {e}")
+
+#     finally:
+#         await nc.close()
 async def message_handler(msg):
+    print("message====================")
     print(f"Received message: {msg}")
 
-async def subscribe(subject):
-    loop = asyncio.get_event_loop()  # Get the current event loop
-    asyncio.set_event_loop(loop)  # Set the event loop
+# async def consume_messages(subject, event):
+#     nc = NATS()
 
-    nc = NATS()
-    print("inside nc")
+#     try:
+#         print("consumer========================")
+#         await nc.connect(servers=["nats://nats:4222"])
 
-    await nc.connect(servers=["nats://nats:4222"])
-    await nc.subscribe(subject, cb=message_handler)
+#         # Use await when subscribing
+#         await nc.subscribe(subject, cb=message_handler)
 
-    try:
-        await nc.wait_closed()
-    finally:
-        await nc.close()
+#         print("helloo=============")
+#         # Signal that the subscription is ready
+#         event.set()
+#     except Exception as e:
+#         print(f"Error consuming messages: {e}")
+#     finally:
+#         await nc.close()
+
+async def consume_messages(subject, event):
+   nc = NATS()
+
+   try:
+       print("consumer========================")
+       await nc.connect(servers=["nats://nats:4222"])
+
+       # Use await when subscribing
+       await nc.subscribe(subject, cb=message_handler)
+
+       print("Subscription established")
+       # Signal that the subscription is ready
+       event.set()
+   except Exception as e:
+       print(f"Error consuming messages: {e}")
+   finally:
+       await nc.close()

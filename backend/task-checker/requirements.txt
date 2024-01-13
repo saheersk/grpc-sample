@@ -11,3 +11,4 @@ flask-cors
 psycopg2-binary
 Flask-Migrate
 asyncio-nats-client
+nats.py

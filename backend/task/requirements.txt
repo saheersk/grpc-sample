@@ -18,7 +18,9 @@ python-decouple==3.8
 pytz==2023.3.post1
 sqlparse==0.4.4
 uvicorn==0.24.0.post1
-asyncio-nats-client==0.11.5
+django-nats-client==0.4.2
+# asyncio-nats-client==0.11.5
+# django_nats
 # django-grpc-framework==0.3.0
 # grpcio-tools==1.27.1
 # grpcio==1.27.1

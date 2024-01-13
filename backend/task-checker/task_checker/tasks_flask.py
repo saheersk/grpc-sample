@@ -76,9 +76,14 @@ def consume_kafka_messages(topic):
         consumer.close()
 
 import asyncio
-from task_checker.consumers import subscribe
+from task_checker.consumers import consume_messages
+
+event = asyncio.Event()
+
 
 @celery.task(queue='queue_for_task2')
 def async_subscribe(subject):
-    asyncio.run(subscribe(subject))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(consume_messages(subject, event))
 
+event.set()
