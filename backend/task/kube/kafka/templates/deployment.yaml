@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kafka.fullname" . }}
+  labels:
+    app: {{ template "kafka.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "kafka.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "kafka.fullname" . }}
+    spec:
+      containers:
+        - name: {{ template "kafka.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          env:
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+              value: "{{ .Values.kafka.zookeeperConnect }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kafka.fullname" . }}
+spec:
+  ports:
+    - port: {{ .Values.service.externalPort }}
+      targetPort: {{ .Values.service.internalPort }}
+  selector:
+    app: {{ template "kafka.fullname" . }}
+  type: {{ .Values.service.type }}
