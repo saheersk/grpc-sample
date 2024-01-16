@@ -1,0 +1,17 @@
+image:
+  repository: bitnami/zookeeper
+  tag: 3.7.0
+
+auth:
+  enable: true
+  users: "user1,user2"
+  passwords: "pass4user1,pass4user2"
+
+persistence:
+  enabled: true
+  path: "/bitnami/zookeeper"
+  size: 1Gi  
+
+service:
+  type: ClusterIP
+  port: 2181

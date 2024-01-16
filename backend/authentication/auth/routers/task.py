@@ -15,6 +15,7 @@ router = APIRouter(
 get_db = database.get_db
 
 TASK_URL = "http://task-app:8000/task/api/v1/service/"
+# TASK_URL = "http://django-service:8000/task/api/v1/service/"
 
 
 async def process_task_request(method: str, data: schemas.Task = None):

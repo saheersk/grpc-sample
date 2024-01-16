@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 
 app.config['SECRET_KEY'] = '982374989364876jasdfhskjd'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://checker_user:checker_user123@postgres-flask-service:5432/checker_db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://checker_user:checker_user123@postgres_checker:5432/checker_db'
 CORS(app, origins=["http://task-auth:8000", "http://localhost:8001"])
 

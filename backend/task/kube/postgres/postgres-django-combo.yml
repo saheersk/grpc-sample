@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-django-deployment
+  labels:
+    app: postgres-django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-django
+  template:
+    metadata:
+      labels:
+        app: postgres-django
+    spec:
+      containers:
+      - name: postgres-django
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-django-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-django-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-django-secret
+              key: POSTGRES_PASSWORD
+---     
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-django-service
+spec:
+  selector:
+    app: postgres-django 
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

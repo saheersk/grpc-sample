@@ -18,10 +18,10 @@ class TaskView(APIView):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
 
-        serialized_message = json.dumps({"message": "Hello Nats"})
+        # serialized_message = json.dumps({"message": "Hello Nats"})
         
         # async_produce_nat.apply_async(args=['my_subject', serialized_message], queue='queue_for_task1')
-        async_produce_nat.apply_async(args=['my_subject', serialized_message], queue='queue_for_task1')
+        # async_produce_nat.apply_async(args=['my_subject', serialized_message], queue='queue_for_task1')
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 

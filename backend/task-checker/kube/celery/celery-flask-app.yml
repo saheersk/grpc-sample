@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-flask-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-flask-worker
+  template:
+    metadata:
+      labels:
+        app: celery-flask-worker
+    spec:
+      containers:
+      - name: celery-flask
+        image: saheerabcd/flask-task:1.0.0
+        envFrom:
+          - secretRef:
+              name: celery-secret
+        command: ["celery", "-A", "task_checker.celery_instance", "worker", "--loglevel=info", "-Q", "queue_for_task2"]

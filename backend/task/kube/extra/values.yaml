@@ -1,0 +1,7 @@
+zookeeper:
+ enabled: true
+kafka:
+ kraft:
+   enabled: false
+ controller:
+   replicaCount: 0

@@ -12,6 +12,8 @@ router = APIRouter(
 )
 
 TASK_URL = "http://task-checker:5000/flask"
+# TASK_URL = "http://flask-service:5000/flask"
+
 get_db = database.get_db
 
 @router.get("/gateway/task-checker/")
@@ -39,15 +41,15 @@ async def get_all_task(db: Session = Depends(get_db), current_user: schemas.User
             raise HTTPException(status_code=e.response.status_code, detail="Microservice 2 error")
         
 
-@router.get("/gateway/task-checker/nats/")
-async def get_nats():
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f'{TASK_URL}/nat')
-            response.raise_for_status()
-            return response.json()
-    except httpx.HTTPError as e:
-        if isinstance(e, ConnectError):
-            raise HTTPException(status_code=503, detail="Service unavailable")
-        else:
-            raise HTTPException(status_code=e.response.status_code, detail="Microservice 2 error")
+# @router.get("/gateway/task-checker/nats/")
+# async def get_nats():
+#     try:
+#         async with httpx.AsyncClient() as client:
+#             response = await client.get(f'{TASK_URL}/nat')
+#             response.raise_for_status()
+#             return response.json()
+#     except httpx.HTTPError as e:
+#         if isinstance(e, ConnectError):
+#             raise HTTPException(status_code=503, detail="Service unavailable")
+#         else:
+#             raise HTTPException(status_code=e.response.status_code, detail="Microservice 2 error")

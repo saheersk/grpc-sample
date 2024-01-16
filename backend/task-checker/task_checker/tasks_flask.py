@@ -43,9 +43,12 @@ def consume_kafka_messages(topic):
         'auto.offset.reset': 'earliest'
     })
 
+    print("Consumer Configuration:", consumer)
+    
+    print("topic=================", topic)
     tp = TopicPartition(topic, 0)
     consumer.assign([tp])
-
+    print("tp=================", tp)
     try:
         while True:
             msg = consumer.poll(1.0)
@@ -59,7 +62,7 @@ def consume_kafka_messages(topic):
 
             try:
                 string_message = msg.value().decode('utf-8')
-                print("String recived",string_message)
+                print("String received",string_message)
 
                 message_data = json.loads(string_message)
                 print('Received message:', message_data)      
@@ -74,6 +77,20 @@ def consume_kafka_messages(topic):
         print("Received keyboard interrupt")
     finally:
         consumer.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import asyncio
 from task_checker.consumers import consume_messages

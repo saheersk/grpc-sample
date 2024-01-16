@@ -6,6 +6,7 @@ import asyncio
 
 
 KAFKA_BOOTSTRAP_SERVERS = 'kafka_task:9092'
+# KAFKA_BOOTSTRAP_SERVERS = 'kafka:9092'
 
 
 def produce_kafka_message(topic, message):
@@ -28,7 +29,7 @@ def produce_kafka_message(topic, message):
 
 async def verify_message(subject):
    nc = NATS()
-   await nc.connect(servers=["nats://localhost:4222"])
+   await nc.connect(servers=["nats://nats:4222"])
    async def message_received(msg):
        print(f"Verified message: {msg.data}")
    await nc.subscribe(subject, cb=message_received)
@@ -41,7 +42,7 @@ async def publish_message(subject, message):
     try:
         print("nats producer========", message)
         # connection = await nats_client.connect(servers=["nats://localhost:4222"])
-        connection = await nats_client.connect(servers=["nats://demo.nats.io:4222"], tls=False)
+        connection = await nats_client.connect(servers=["nats://nats:4222"], tls=False)
 
         print("Connection========", connection)
         # Ensure message is encoded to bytes

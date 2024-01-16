@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-flask-deployment
+  labels:
+    app: postgres-flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-flask
+  template:
+    metadata:
+      labels:
+        app: postgres-flask
+    spec:
+      containers:
+      - name: postgres-flask
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-flask-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-flask-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-flask-secret
+              key: POSTGRES_PASSWORD
+---     
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-flask-service
+spec:
+  selector:
+    app: postgres-flask 
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-task-worker
+spec:
+  replicas: 1  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: celery-task-worker
+  template:
+    metadata:
+      labels:
+        app: celery-task-worker
+    spec:
+      containers:
+      - name: celery-django
+        image: saheerabcd/django-task:1.0.2
+        envFrom:
+          - secretRef:
+              name: celery-secret
+        command: ["celery", "-A", "task_service.api.tasks", "worker", "--loglevel=info", "-Q", "queue_for_task1"]

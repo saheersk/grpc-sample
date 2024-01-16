@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "zookeeper.fullname" . }}
+  labels:
+    app: {{ template "zookeeper.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "zookeeper.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "zookeeper.fullname" . }}
+    spec:
+      containers:
+        - name: {{ template "zookeeper.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: ZOO_ENABLE_AUTH
+              value: "{{ .Values.auth.enable }}"
+            - name: ZOO_SERVER_USERS
+              value: "{{ .Values.auth.users }}"
+            - name: ZOO_SERVER_PASSWORDS
+              value: "{{ .Values.auth.passwords }}"
+          volumeMounts:
+            - name: zookeeper-data
+              mountPath: "{{ .Values.persistence.path }}"
+      volumes:
+        - name: zookeeper-data
+          persistentVolumeClaim:
+            claimName: {{ template "zookeeper.fullname" . }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "zookeeper.fullname" . }}
+spec:
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+  selector:
+    app: {{ template "zookeeper.fullname" . }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "zookeeper.fullname" . }}-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}

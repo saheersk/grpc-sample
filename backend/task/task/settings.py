@@ -38,7 +38,7 @@ NATS = {
 }
 
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://localhost:8001", "http://localhost:8003", "http://localhost:8002", "http://192.168.65.1:*", "http://task-auth:8000"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://localhost:8001", "http://localhost:8003", "http://localhost:8002", "http://192.168.65.1:*", "http://task-auth:8000", "http://task-auth:8000"]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -152,8 +152,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'pyamqp://guest:guest@rabbitmq:5672//'
-CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="")
+CELERY_RESULT_BACKEND = config("DATABASE_NAME", default="")
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

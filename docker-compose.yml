@@ -4,6 +4,8 @@ services:
   postgres_auth:
     image: postgres:16
     container_name: postgres_task_auth_container
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_DB: task_auth_db
       POSTGRES_USER: task_auth_user
@@ -37,11 +39,22 @@ services:
       dockerfile: Dockerfile
     image: task-auth:latest
     container_name: task-auth
-    command: sh -c "uvicorn auth.main:app --host 0.0.0.0 --port 8000"
+    # command: sh -c "uvicorn auth.main:app --host 0.0.0.0 --port 8000"
     ports:
       - 8001:8000
     depends_on:
       - postgres_auth
+      
+  # task_auth:
+  #   build:
+  #     context: ./backend/authentication
+  #     dockerfile: Dockerfile
+  #   image: saheerabcd/fast-auth:1.0.0
+  #   container_name: task-auth-fast
+  #   ports:
+  #     - 8001:8000
+  #   depends_on:
+  #     - postgres_auth
 
   task_app:
     build:
@@ -66,7 +79,7 @@ services:
       dockerfile: Dockerfile
     image: task-checker:latest
     container_name: task-checker
-    command: sh -c "export FLASK_APP=run && python -m flask run --host=0.0.0.0 --port=5000"
+    # command: sh -c "export FLASK_APP=run && python -m flask run --host=0.0.0.0 --port=5000"
     ports:
       - 8003:5000
     depends_on:
@@ -117,11 +130,11 @@ services:
     depends_on:
       - task_checker
 
-  nats:
-   image: nats:latest
-   ports:
-     - 4222:4222
-     - 8222:8222
+#   nats:
+#    image: nats:latest
+#    ports:
+#      - 4222:4222
+#      - 8222:8222
 
   celery_app:
     restart: always

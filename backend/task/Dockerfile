@@ -12,3 +12,5 @@ COPY . .
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip setuptools
 RUN pip install -r requirements.txt
+
+# CMD ["sh", "-c", "./migrate.sh && ./entrypoint.sh"]
